@@ -4,66 +4,40 @@ import { categoryModel } from "../../../database/models/category.model.js"
 //? Add Category
 const addCategory = async (req, res, next) => {
     req.body.slug = slugify(req.body.name.toLowerCase().split(' ').join('-'))
-    let category = new categoryModel(req.body)
+    let newCategory = new categoryModel(req.body)
     // check if category already exists
-    const categoryExists = await categoryModel.findOne({ name: req.body.name })
-    if (categoryExists) {
-        return res.status(409).json({
-            message: 'Category already exists'
-        })
-    }
-    category.save()
-        .then((result) => {
-            res.status(201).json(result)
-        })
+    const category = await categoryModel.findOne({ name: req.body.name })
+    category && res.status(409).json({ message: "Category Already Exists!" })
+    !category && newCategory.save() && res.status(201).json({ message: "Category Added Successfully ✅", newCategory })
 }
 
 //* Update Category
 const updateCategory = async (req, res, next) => {
     req.body.slug = slugify(req.body.name.toLowerCase().split(' ').join('-'))
-    let existCategory = await categoryModel.findOne({ _id: req.params.id })
-    if (!existCategory) {
-        return res.status(404).json({
-            message: 'Category not found'
-        })
-    }
-    categoryModel.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
-        .then((result) => {
-            res.status(200).json({ message: 'Category Updated Successfully ✅', result })
-        })
+    let category = await categoryModel.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    !category && res.status(404).json({ message: "Category Not Found!" })
+    category && res.status(200).json({ message: "Category Updated Successfully ✅", category })
 }
 
 //! Delete Category
 const deleteCategory = async (req, res, next) => {
-    let existCategory = await categoryModel.findOne({ _id: req.params.id })
-    if (!existCategory) {
-        return res.status(404).json({
-            message: 'Category not found'
-        })
-    }
-    categoryModel.findOneAndDelete({ _id: req.params.id })
-        .then((result) => {
-            res.status(200).json({ message: 'Category Deleted Successfully ✅', result })
-        })
+    let category = await categoryModel.findByIdAndDelete(req.params.id)
+    !category && res.status(404).json({ message: "Category Not Found!" })
+    category && res.status(200).json({ message: "Category Deleted Successfully ✅", category })
 }
 
 // Get All Categories
 const getAllCategories = async (req, res, next) => {
-    categoryModel.find()
-        .then((result) => {
-            res.status(200).json(result)
-        })
+    categoryModel.find().sort({ createdAt: -1 })
+        .then(categories => res.status(200).json({ message: "Categories Found Successfully ✅", categories }))
+        .catch(err => res.status(404).json({ message: "Categories Not Found!" }))
 }
 
 // Get Specific Category
 const getSpecificCategory = async (req, res, next) => {
-    let existCategory = await categoryModel.findOne({ _id: req.params.id })
-    if (!existCategory) {
-        return res.status(404).json({
-            message: 'Category not found'
-        })
-    }
-    res.status(200).json({ message: 'Category Found Successfully ✅', existCategory })
+    let category = await categoryModel.findOne({ _id: req.params.id })
+    !category && res.status(404).json({ message: "Category Not Found!" })
+    category && res.status(200).json({ message: "Category Found Successfully ✅", category })
 }
 
 export {

@@ -7,11 +7,11 @@ const categoryRouter = express.Router();
 config();
 
 categoryRouter
-    .route("/categories")
+    .route("/")
     .post(addCategory)
     .get(getAllCategories)
 categoryRouter
-    .route("/categories/:id")
+    .route("/:id")
     .put(updateCategory)
     .delete(deleteCategory)
     .get(getSpecificCategory)

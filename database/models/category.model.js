@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose, { Schema } from "mongoose"
 
 const categorySchema = new mongoose.Schema({
     name: {
@@ -13,7 +13,7 @@ const categorySchema = new mongoose.Schema({
         required: true,
         lowercase: true,
     },
-    Image: {
+    img: {
         type: String,
     },
     createdBy: {
@@ -21,5 +21,9 @@ const categorySchema = new mongoose.Schema({
         ref: 'user',
     }
 }, { timestamps: true })
+
+categorySchema.post('init',function(doc){
+    doc.img=process.env.BASE_URL+'/uploads/'+doc.img
+})
 
 export const categoryModel = mongoose.model('category', categorySchema)

@@ -13,7 +13,7 @@ const brandSchema = new mongoose.Schema({
         required: true,
         lowercase: true,
     },
-    logo: {
+    img: {
         type: String,
     },
     createdBy: {
@@ -21,5 +21,9 @@ const brandSchema = new mongoose.Schema({
         ref: 'user',
     }
 }, { timestamps: true })
+
+brandSchema.post('init', function (doc) {
+    doc.img = process.env.BASE_URL + '/uploads/' + doc.img
+})
 
 export const brandModel = mongoose.model('brand', brandSchema)

@@ -82,4 +82,10 @@ const productSchema = new mongoose.Schema({
     }
 }, { timestamps: true })
 
+productSchema.post('init', function (doc) {
+    doc.imgCover = process.env.BASE_URL + '/uploads/' + doc.imgCover,
+        doc.images = doc.images.map((img) =>
+            process.env.BASE_URL + '/uploads/' + img)
+})
+
 export const productModel = mongoose.model('product', productSchema)

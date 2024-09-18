@@ -18,6 +18,11 @@ const userSchema = new mongoose.Schema({
         required: true,
         minLength: [6, 'password must be at least 6 characters']
     },
+    mobileNumber: {
+        type: String,
+        required: true,
+        unique: [true, 'mobile number must be unique']
+    },
     status: {
         type: String,
         default: 'offline',

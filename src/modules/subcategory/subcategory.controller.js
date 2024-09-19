@@ -5,6 +5,7 @@ import { catchError } from "../../middleware/catchError.js"
 //? Add Subcategory
 const addSubcategory = catchError(async (req, res, next) => {
     req.body.slug = slugify(req.body.name.toLowerCase().split(' ').join('-'))
+    req.body.img = req.file.filename
     let newSubcategory = new subCategoryModel(req.body)
     // check if subcategory already exists
     const subcategory = await subCategoryModel.findOne({ name: req.body.name })

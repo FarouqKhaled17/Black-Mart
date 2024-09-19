@@ -15,6 +15,7 @@ const signup = catchError(async (req, res, next) => {
     let token = jwt.sign({
         userId: user._id,
         email: user.email,
+        Gmail: user.Gmail,
         role: user.role
     }, process.env.SECRET_KEY, {
         expiresIn: process.env.JWT_EXPIRES_IN
@@ -45,6 +46,7 @@ const login = catchError(async (req, res, next) => {
     let token = jwt.sign({
         userId: user._id,
         email: user.email,
+        Gmail: user.Gmail,
         username: user.username,
         role: user.role
     }, process.env.SECRET_KEY, {
@@ -57,6 +59,7 @@ const login = catchError(async (req, res, next) => {
             userId: user._id,
             username: user.username,
             email: user.email,
+            Gmail: user.Gmail,
             role: user.role
         }
     });

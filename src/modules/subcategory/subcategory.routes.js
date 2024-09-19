@@ -10,11 +10,11 @@ config();
 
 subcategoryRouter
     .route("/")
-    .post( addSubcategory)
+    .post( uploadSingleFile('img'),addSubcategory)
     .get(getAllSubcategories)
     subcategoryRouter
     .route("/:id")
-    .put(updateSubcategory)
+    .put(uploadSingleFile('img'),updateSubcategory)
     .delete(deleteSubcategory)
     .get(getSpecificSubcategory)
 

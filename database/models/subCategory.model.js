@@ -13,6 +13,9 @@ const subCategorySchema = new mongoose.Schema({
         required: true,
         lowercase: true,
     },
+    img: {
+        type: String,
+    },
     category: {
         type: mongoose.Types.ObjectId,
         ref: 'category',
@@ -22,5 +25,9 @@ const subCategorySchema = new mongoose.Schema({
         ref: 'user',
     }
 }, { timestamps: true })
+
+subCategorySchema.post('init', function (doc) {
+    doc.img = process.env.BASE_URL + '/uploads/' + doc.img
+})
 
 export const subCategoryModel = mongoose.model('subCategory', subCategorySchema)

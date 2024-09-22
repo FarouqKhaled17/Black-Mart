@@ -1,6 +1,7 @@
 import slugify from "slugify"
 import { catchError } from "../../middleware/catchError.js"
 import { productModel } from "../../../database/models/product.model.js"
+import { statusCode } from "../../utils/statusCode.js"
 
 //? Add Product
 const addProduct = catchError(async (req, res, next) => {
@@ -10,8 +11,8 @@ const addProduct = catchError(async (req, res, next) => {
     let newProduct = new productModel(req.body)
     // check if product already exists
     const product = await productModel.findOne({ name: req.body.name })
-    product && res.status(409).json({ message: "Product Already Exists!" })
-    !product && newProduct.save() && res.status(201).json({ message: "Product Added Successfully ✅", newProduct })
+    product && res.status(statusCode.CONFLICT).json({ message: "Product Already Exists!" })
+    !product && newProduct.save() && res.status(statusCode.CREATED).json({ message: "Product Added Successfully ✅", newProduct })
 })
 
 //* Update Product
@@ -20,29 +21,33 @@ const updateProduct = catchError(async (req, res, next) => {
     if (req.files.imgCover) req.body.imgCover = req.files.imgCover[0].filename
     if (req.files.images) req.body.images = req.files.images.map(img => img.filename)
     let product = await productModel.findByIdAndUpdate(req.params.id, req.body, { new: true })
-    !product && res.status(404).json({ message: "Product Not Found!" })
-    product && res.status(200).json({ message: "Product Updated Successfully ✅", product })
+    !product && res.status(statusCode.NOT_FOUND).json({ message: "Product Not Found!" })
+    product && res.status(statusCode.OK).json({ message: "Product Updated Successfully ✅", product })
 })
 
 //! Delete Product
 const deleteProduct = catchError(async (req, res, next) => {
     let product = await productModel.findByIdAndDelete(req.params.id)
-    !product && res.status(404).json({ message: "Product Not Found!" })
-    product && res.status(200).json({ message: "Product Deleted Successfully ✅", product })
+    !product && res.status(statusCode.NOT_FOUND).json({ message: "Product Not Found!" })
+    product && res.status(statusCode.OK).json({ message: "Product Deleted Successfully ✅", product })
 })
 
 // Get All Products
 const getAllProducts = catchError(async (req, res, next) => {
-    productModel.find().sort({ createdAt: -1 })
-        .then(products => res.status(200).json({ message: "Products Found Successfully ✅", products }))
-        .catch(err => res.status(404).json({ message: "Products Not Found!" }))
+    let products =await productModel.find()
+        .sort({ createdAt: -1 })
+        .populate('category', 'name')
+        .populate('brand', 'name')
+        .populate('subCategory', 'name')
+    !products && res.status(statusCode.NOT_FOUND).json({ message: "Products Not Found!" })
+    products && res.status(statusCode.OK).json({ message: "Products Found Successfully ✅", products })
 })
 
 // Get Specific Product
 const getSpecificProduct = catchError(async (req, res, next) => {
     let product = await productModel.findOne({ _id: req.params.id })
-    !product && res.status(404).json({ message: "Product Not Found!" })
-    product && res.status(200).json({ message: "Product Found Successfully ✅", product })
+    !product && res.status(statusCode.NOT_FOUND).json({ message: "Product Not Found!" })
+    product && res.status(statusCode.OK).json({ message: "Product Found Successfully ✅", product })
 })
 
 export {

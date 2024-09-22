@@ -32,15 +32,15 @@ const deleteSubcategory = catchError(async (req, res, next) => {
 // Get All Categories
 const getAllSubcategories = catchError(async (req, res, next) => {
     subCategoryModel.find().sort({ createdAt: -1 })
-        .then(categories => res.status(200).json({ message: "Categories Found Successfully ✅", categories }))
-        .catch(err => res.status(404).json({ message: "Categories Not Found!" }))
+        .then(subCategory => res.status(200).json({ message: "SubCategories Found Successfully ✅", subCategory }))
+        .catch(err => res.status(404).json({ message: "SubCategories Not Found!" }))
 })
 
 // Get Specific Subcategory
 const getSpecificSubcategory = catchError(async (req, res, next) => {
     let subcategory = await subCategoryModel.findOne({ _id: req.params.id })
     !subcategory && res.status(404).json({ message: "Subcategory Not Found!" })
-    subcategory && res.status(200).json({ message: "Subcategory Found Successfully ✅", category })
+    subcategory && res.status(200).json({ message: "Subcategory Found Successfully ✅", subcategory })
 })
 
 export {

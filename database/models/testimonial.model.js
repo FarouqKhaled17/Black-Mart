@@ -5,7 +5,7 @@ const testimonialSchema = new Schema({
         type: mongoose.Types.ObjectId,
         ref: 'user',
     },
-    comment: {
+    testimonial: {
         type: String,
         required: true,
         trim: true,

@@ -65,9 +65,8 @@ const productSchema = new mongoose.Schema({
         min: 0
     },
     comment: {
-        type: String,
-        trim: true,
-        minLength: [10, 'comment must be at least 10 characters']
+        type: mongoose.Types.ObjectId,
+        ref: 'comment',
     },
     category: {
         type: mongoose.Types.ObjectId,

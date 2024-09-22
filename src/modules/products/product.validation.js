@@ -9,7 +9,7 @@ const addNewProductVal = joi.object({
     quantity: joi.number().min(0).required(),
     category: joi.string().required().hex().length(24),
     subcategory: joi.string().required().hex().length(24),
-    brand: joi.string().min(2).max(100).trim(),
+    brand: joi.string().min(2).max(100).trim().required(),
     createdBy: joi.string().hex().length(24).optional(),
 })
 //validation for getting a specific category

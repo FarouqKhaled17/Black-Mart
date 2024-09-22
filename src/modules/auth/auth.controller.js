@@ -9,7 +9,18 @@ import validator from "validator";
 
 //!signup
 const signup = catchError(async (req, res, next) => {
+    console.log(req.body);  // Log the incoming request body
+    if (!validator.isStrongPassword(req.body.password, {
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1
+    })) {
+        return next(new AppError('Password is not strong enough!', statusCode.BAD_REQUEST));
+    }
     req.body.password = bcrypt.hashSync(req.body.password, 10);
+
     let user = new userModel(req.body);
     await user.save();
     let token = jwt.sign({
@@ -52,6 +63,8 @@ const login = catchError(async (req, res, next) => {
     }, process.env.SECRET_KEY, {
         expiresIn: process.env.JWT_EXPIRES_IN
     });
+    //update the status to online
+    await userModel.updateOne({ _id: user._id }, { status: "online" });
     res.status(statusCode.OK).json({
         message: "Login Successful",
         token,

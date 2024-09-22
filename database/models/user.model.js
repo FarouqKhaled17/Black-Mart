@@ -16,7 +16,6 @@ const userSchema = new mongoose.Schema({
     },
     Gmail: {
         type: String,
-        required: true,
         trim: true,
         unique: [true, 'email must be unique']
     },
@@ -25,9 +24,11 @@ const userSchema = new mongoose.Schema({
         required: true,
         minLength: [6, 'password must be at least 6 characters']
     },
+    img: {
+        type: String,
+    },
     mobileNumber: {
         type: String,
-        required: true,
         unique: [true, 'mobile number must be unique']
     },
     status: {
@@ -60,5 +61,9 @@ const userSchema = new mongoose.Schema({
         type: String,
     }
 }, { timestamps: true })
+
+userSchema.post('init', function (doc) {
+    doc.img = process.env.BASE_URL + '/uploads/' + doc.img
+})
 
 export const userModel = mongoose.model('user', userSchema)

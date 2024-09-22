@@ -3,6 +3,7 @@ import { config } from "dotenv";
 import { validation } from "../../middleware/validation.js";
 import { addUser, deleteUser, getAllUsers, getSpecificUser, updateUser } from "./user.controller.js";
 import { addNewUserVal, getSpecificUserVal, updateUserVal } from "./user.validation.js";
+import { allowedTo, protectedRoutes } from "../auth/auth.controller.js";
 
 const userRouter = express.Router();
 
@@ -10,12 +11,12 @@ config();
 
 userRouter
     .route("/")
-    .post(addUser)
-    .get(getAllUsers)
+    .post(protectedRoutes, allowedTo('admin'), addUser)
+    .get(protectedRoutes, allowedTo('admin'), getAllUsers)
 userRouter
     .route("/:id")
-    .put(validation(updateUserVal), updateUser)
-    .delete(deleteUser)
-    .get(validation(getSpecificUserVal), getSpecificUser)
+    .put(protectedRoutes, allowedTo('admin'), validation(updateUserVal), updateUser)
+    .delete(protectedRoutes, allowedTo('admin'), deleteUser)
+    .get(protectedRoutes, allowedTo('admin'), validation(getSpecificUserVal), getSpecificUser)
 
 export default userRouter;

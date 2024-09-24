@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-const testimonialSchema = new Schema({
+const testimonialSchema = new mongoose.Schema({
     user: {
         type: mongoose.Types.ObjectId,
         ref: 'user',

@@ -17,8 +17,8 @@ const signupVal = joi.object(
 //validation for login
 const loginVal = joi.object(
     {
-        email: joi.string().required().min(2).max(100).trim().pattern(/^[a-zA-Z0-9._%+-]+@blackmart\.com$/), 
-        Gmail: joi.string().email().pattern(/^[a-zA-Z0-9._%+-]+@gmail\.com$/), 
+        email: joi.string().required().min(2).max(100).trim().pattern(/^[a-zA-Z0-9._%+-]+@blackmart\.com$/),
+        Gmail: joi.string().email().pattern(/^[a-zA-Z0-9._%+-]+@gmail\.com$/),
         password: joi.string().required().min(6).max(100).trim().pattern(passwordPattern),
     }
 )

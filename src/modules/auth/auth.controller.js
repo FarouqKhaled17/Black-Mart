@@ -131,11 +131,10 @@ const changeUserPassword = catchError(async (req, res, next) => {
 const protectedRoutes = catchError(async (req, res, next) => {
     let { token } = req.headers;
     if (!token) {
-        return next(new AppError("Token not found", statusCode.UNAUTHORIZED));
+        return next(new AppError("Token isn't provided, Please Login!", statusCode.UNAUTHORIZED));
     }
 
     let decode = jwt.verify(token, process.env.SECRET_KEY);
-    console.log(decode);
 
     let user = await userModel.findById(decode.userId);
     if (!user) {

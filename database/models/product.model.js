@@ -84,12 +84,22 @@ const productSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'user',
     }
-}, { timestamps: true })
+}, { timestamps: true, toJSON: { virtuals: true } })
 
 productSchema.post('init', function (doc) {
     doc.imgCover = process.env.BASE_URL + '/uploads/' + doc.imgCover,
         doc.images = doc.images.map((img) =>
             process.env.BASE_URL + '/uploads/' + img)
 })
+
+productSchema.virtual('myreviews', {
+    ref: 'review',
+    localField: '_id',
+    foreignField: 'product'
+})
+
+productSchema.pre(/^find/, function () {
+    this.populate('myreviews');
+});
 
 export const productModel = mongoose.model('product', productSchema)

@@ -59,7 +59,17 @@ const userSchema = new mongoose.Schema({
     },
     avatar: {
         type: String,
-    }
+    },
+    wishlist: [{
+        type: mongoose.Types.ObjectId,
+        ref: 'product'
+    }],
+    address: [{
+        street: String,
+        city: String,
+        phone: String,
+        country: String,
+    }],
 }, { timestamps: true })
 
 userSchema.post('init', function (doc) {

@@ -22,4 +22,8 @@ const testimonialSchema = new mongoose.Schema({
     }
 }, { timestamps: true })
 
+testimonialSchema.pre(/^find/, function () {
+    this.populate('user', 'username')
+})
+
 export const testimonialModel = mongoose.model('testimonial', testimonialSchema)

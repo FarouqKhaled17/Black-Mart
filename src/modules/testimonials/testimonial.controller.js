@@ -28,7 +28,6 @@ const deleteTestimonial = catchError(async (req, res, next) => {
 // Get All Testimonials
 const getAllTestimonials = catchError(async (req, res, next) => {
     let testimonials = await testimonialModel.find().sort({ createdAt: -1 })
-        .populate('user', 'username')
     !testimonials && res.status(statusCode.NOT_FOUND).json({ message: "Testimonials Not Found!" })
     testimonials && res.status(statusCode.OK).json({ message: "Testimonials Found Successfully ✅", testimonials })
 })

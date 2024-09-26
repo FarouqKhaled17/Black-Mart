@@ -13,7 +13,7 @@ config();
 categoryRouter
     .route("/")
     .post(protectedRoutes, allowedTo('admin'), uploadSingleFile('img'), validation(addNewCategoryVal), addCategory)
-    .get(protectedRoutes, allowedTo('user', 'admin'), getAllCategories)
+    .get( getAllCategories)
 categoryRouter
     .route("/:id")
     .put(protectedRoutes, allowedTo('admin'), uploadSingleFile('img'), validation(updateCategoryVal), updateCategory)

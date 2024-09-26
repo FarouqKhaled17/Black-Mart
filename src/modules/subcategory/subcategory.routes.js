@@ -12,7 +12,7 @@ config();
 subcategoryRouter
     .route("/")
     .post(protectedRoutes, allowedTo('admin'), uploadSingleFile('img'), addSubcategory)
-    .get(protectedRoutes, allowedTo('user', 'admin'), getAllSubcategories)
+    .get(getAllSubcategories)
 subcategoryRouter
     .route("/:id")
     .put(protectedRoutes, allowedTo('admin'), uploadSingleFile('img'), updateSubcategory)

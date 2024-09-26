@@ -16,7 +16,7 @@ productRouter
         { name: "imgCover", maxcout: 1 },
         { name: "images", maxcout: 10 }
     ]), validation(addNewProductVal), addProduct)
-    .get(protectedRoutes, allowedTo('user', 'admin'), getAllProducts)
+    .get(getAllProducts)
 productRouter
     .route("/:id")
     .put(protectedRoutes, allowedTo('admin'), uploadFields([

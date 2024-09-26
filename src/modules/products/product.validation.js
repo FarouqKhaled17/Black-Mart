@@ -3,7 +3,7 @@ import joi from 'joi';
 //validation for createing a new category
 const addNewProductVal = joi.object({
     name: joi.string().required().min(2).max(200).trim(),
-    description: joi.string().required().min(2).max(1000).trim(),
+    description: joi.string().required().min(20).max(1000).trim().message("Please enter a description with at least 20 characters"),
     price: joi.number().min(0).required(),
     priceAterDiscount: joi.number().min(0).optional(),
     quantity: joi.number().min(0).required(),

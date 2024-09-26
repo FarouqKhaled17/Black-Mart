@@ -34,7 +34,7 @@ const deleteProduct = catchError(async (req, res, next) => {
 
 // Get All Products
 const getAllProducts = catchError(async (req, res, next) => {
-    let products =await productModel.find()
+    let products = await productModel.find()
         .sort({ createdAt: -1 })
         .populate('category', 'name')
         .populate('brand', 'name')

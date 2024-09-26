@@ -5,15 +5,28 @@ import { statusCode } from "../../utils/statusCode.js"
 
 //? Add Product
 const addProduct = catchError(async (req, res, next) => {
-    req.body.slug = slugify(req.body.name.toLowerCase().split(' ').join('-'))
-    req.body.imgCover = req.files.imgCover[0].filename
-    req.body.images = req.files.images.map(img => img.filename)
-    let newProduct = new productModel(req.body)
-    // check if product already exists
-    const product = await productModel.findOne({ name: req.body.name })
-    product && res.status(statusCode.CONFLICT).json({ message: "Product Already Exists!" })
-    !product && newProduct.save() && res.status(statusCode.CREATED).json({ message: "Product Added Successfully ✅", newProduct })
-})
+    req.body.slug = slugify(req.body.name.toLowerCase().split(' ').join('-'));
+    req.body.imgCover = req.files.imgCover[0].filename;
+    req.body.images = req.files.images.map(img => img.filename);
+
+    // Check if product already exists
+    const existingProduct = await productModel.findOne({ name: req.body.name });
+    if (existingProduct) {
+        return res.status(statusCode.CONFLICT).json({ message: "Product Already Exists!" });
+    }
+
+    // Save the new product to the database
+    const newProduct = await new productModel(req.body).save();
+
+    // Retrieve the product with populated fields
+    const populatedProduct = await productModel.findById(newProduct._id)
+        .populate('category', 'name')
+        .populate('brand', 'name')
+        .populate('subCategory', 'name');
+
+    return res.status(statusCode.CREATED).json({ message: "Product Added Successfully ✅", product: populatedProduct });
+});
+
 
 //* Update Product
 const updateProduct = catchError(async (req, res, next) => {

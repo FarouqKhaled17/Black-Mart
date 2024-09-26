@@ -1,6 +1,7 @@
 import slugify from "slugify"
 import { categoryModel } from "../../../database/models/category.model.js"
 import { catchError } from "../../middleware/catchError.js"
+import { productModel } from "../../../database/models/product.model.js"
 
 //? Add Category
 const addCategory = catchError(async (req, res, next) => {
@@ -15,8 +16,8 @@ const addCategory = catchError(async (req, res, next) => {
 
 //* Update Category
 const updateCategory = catchError(async (req, res, next) => {
-    if(req.body.name) req.body.slug = slugify(req.body.name)
-    if(req.file) req.body.img = req.file.filename
+    if (req.body.name) req.body.slug = slugify(req.body.name)
+    if (req.file) req.body.img = req.file.filename
     let category = await categoryModel.findByIdAndUpdate(req.params.id, req.body, { new: true })
     !category && res.status(404).json({ message: "Category Not Found!" })
     category && res.status(200).json({ message: "Category Updated Successfully ✅", category })
@@ -40,7 +41,8 @@ const getAllCategories = catchError(async (req, res, next) => {
 const getSpecificCategory = catchError(async (req, res, next) => {
     let category = await categoryModel.findOne({ _id: req.params.id })
     !category && res.status(404).json({ message: "Category Not Found!" })
-    category && res.status(200).json({ message: "Category Found Successfully ✅", category })
+    let products = await productModel.find({ category: category._id })
+    category && res.status(200).json({ message: "Category Found Successfully ✅", category, products })
 })
 
 export {

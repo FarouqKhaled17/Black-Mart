@@ -80,7 +80,8 @@ const productSchema = new mongoose.Schema({
         ref: 'subCategory',
     },
     brand: {
-        type: String
+        type: mongoose.Types.ObjectId,
+        ref: 'brand',
     },
     createdBy: {
         type: mongoose.Types.ObjectId,

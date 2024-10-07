@@ -2,7 +2,7 @@
 
 Welcome to our eCommerce Website repository! This project is a comprehensive, full-stack web application designed for modern online retail. It aims to provide a seamless shopping experience for both customers and administrators. The platform is built with cutting-edge technologies, offering a robust set of features to empower businesses in the digital marketplace.
 
-Features
+Features:
 Product Management: Easily add, edit, and manage products with a user-friendly interface.
 User Authentication: Secure user registration and authentication for personalized shopping experiences.
 Shopping Cart: Intuitive shopping cart functionality for seamless order management.

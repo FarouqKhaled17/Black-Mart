@@ -1,4 +1,5 @@
 import mongoose from "mongoose"
+import { productModel } from "./product.model.js";
 
 const brandSchema = new mongoose.Schema({
     name: {
@@ -25,5 +26,13 @@ const brandSchema = new mongoose.Schema({
 brandSchema.post('init', function (doc) {
     doc.img = process.env.BASE_URL + '/uploads/' + doc.img
 })
+
+brandSchema.pre('findOneAndDelete', async function (next) {
+    const brand = await this.model.findOne(this.getQuery());
+    if (brand) {
+        await productModel.deleteMany({ brand: brand._id });
+    }
+    next();
+});
 
 export const brandModel = mongoose.model('brand', brandSchema)

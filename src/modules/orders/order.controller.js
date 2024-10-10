@@ -1,3 +1,5 @@
+import Stripe from "stripe";
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 import { cartModel } from "../../../database/models/cart.model.js";
 import { orderModel } from "../../../database/models/order.model.js";
 import { productModel } from "../../../database/models/product.model.js";
@@ -47,9 +49,45 @@ const getAllOrders = catchError(async (req, res, next) => {
     res.status(statusCode.OK).json({ message: "Orders found successfully ✅", orders });
 });
 
+//!Create Checkout Session
+const createCheckoutSession = catchError(async (req, res, next) => {
+    let cart = await cartModel.findById(req.params.id);
+    if (!cart) {
+        return res.status(404).json({
+            message: "Cart not found. Please check the cart ID and try again.",
+            statusCode: 404
+        });
+    }
+
+    let totalOrderPrice = cart.totalPriceWithDiscount ? cart.totalPriceWithDiscount : cart.totalPrice;
+    const session = await stripe.checkout.sessions.create({
+        line_items: [
+            {
+                price_data: {
+                    currency: "egp",
+                    unit_amount: totalOrderPrice * 100,
+                    product_data: {
+                        name: req.user.username,  // Add a fallback name
+                    },
+                },
+                quantity: 1,
+            },
+        ],
+        mode: "payment",
+        success_url: `${req.protocol}://${req.get("host")}/orders/success`,
+        cancel_url: `${req.protocol}://${req.get("host")}/orders/cancel`,
+        customer_email: req.user.email,
+        client_reference_id: req.params.id,
+        metadata: req.body.shippingAddress,
+    });
+
+    return res.status(statusCode.OK).json({ session });
+});
+
 
 export {
     createCashOrder,
     getSpecificOrder,
-    getAllOrders
+    getAllOrders,
+    createCheckoutSession
 }

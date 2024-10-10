@@ -75,20 +75,20 @@ const addToCart = catchError(async (req, res, next) => {
 
 //! Delete item from the cart
 const deleteItemFromCart = catchError(async (req, res, next) => {
-    let cart = await cartModel.findOneAndUpdate(
-        { user: req.user._id },
-        { $pull: { cartItems: { _id: req.params.id } } },
-        { new: true }
-    );
+    let cart = await cartModel.findOne({ user: req.user._id });
     if (!cart) {
         return res.status(statusCode.NOT_FOUND).json({ message: "Cart Not Found!" });
     }
-    // Update the total price of the cart (only if the cart exists)
+    const itemIndex = cart.cartItems.findIndex(item => item._id.toString() === req.params.id);
+    if (itemIndex === -1) {
+        return res.status(statusCode.NOT_FOUND).json({ message: "Item Not Found in Cart!" });
+    }
+    cart.cartItems.splice(itemIndex, 1);
     cart.totalPrice = cart.cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
     await cart.save();
+
     return res.status(statusCode.OK).json({ message: "Cart Item Deleted Successfully ✅", cart });
 });
-
 
 const updateCart = catchError(async (req, res, next) => {
     let cart = await cartModel.findOne({ user: req.user._id });

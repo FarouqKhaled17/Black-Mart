@@ -58,10 +58,26 @@ const getSpecificUser = catchError(async (req, res, next) => {
     user && res.status(200).json({ message: "User Found Successfully ✅", user })
 })
 
+//Block User
+const blockUser = catchError(async (req, res, next) => {
+    let user = await userModel.findByIdAndUpdate(req.params.id, { isBlocked: true }, { new: true })
+    !user && res.status(404).json({ message: "User Not Found!" })
+    user && res.status(200).json({ message: "User Blocked Successfully ✅", user })
+})
+
+//Unblock User
+const unBlockUser = catchError(async (req, res, next) => {
+    let user = await userModel.findByIdAndUpdate(req.params.id, { isBlocked: false }, { new: true })
+    !user && res.status(404).json({ message: "User Not Found!" })
+    user && res.status(200).json({ message: "User Unblocked Successfully ✅", user })
+})
+
 export {
     addUser,
     updateUser,
     deleteUser,
     getAllUsers,
-    getSpecificUser
+    getSpecificUser,
+    blockUser,
+    unBlockUser
 }

@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose"
+import { productModel } from "./product.model.js";
 
 const categorySchema = new mongoose.Schema({
     name: {
@@ -22,8 +23,16 @@ const categorySchema = new mongoose.Schema({
     }
 }, { timestamps: true })
 
-categorySchema.post('init',function(doc){
-    doc.img=process.env.BASE_URL+'/uploads/'+doc.img
+categorySchema.post('init', function (doc) {
+    doc.img = process.env.BASE_URL + '/uploads/' + doc.img
 })
 
+// Pre-delete middleware to remove associated products when a category is deleted
+categorySchema.pre('findOneAndDelete', async function (next) {
+    const category = await this.model.findOne(this.getQuery()); 
+    if (category) {
+        await productModel.deleteMany({ category: category._id }); 
+    }
+    next();
+});
 export const categoryModel = mongoose.model('category', categorySchema)

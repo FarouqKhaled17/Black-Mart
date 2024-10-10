@@ -29,8 +29,16 @@ const productSchema = new mongoose.Schema({
         minLength: [20, 'product description must be at least 20 characters'],
         maxLength: [500, 'product description must be at most 500 characters']
     },
-    style: String,
-    color: String,
+    style: [
+        {
+            type: String,
+        }
+    ],
+    color: [
+        {
+            type: String,
+        }
+    ],
     typeof: String,
     imgCover: String,
     images: [],

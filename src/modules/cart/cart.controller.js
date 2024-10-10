@@ -31,7 +31,9 @@ const addToCart = catchError(async (req, res, next) => {
             cartItems: [{
                 product: req.body.product,
                 quantity: req.body.quantity,
-                price: product.price
+                price: product.price,
+                size: req.body.size,
+                color: req.body.color
             }],
             totalPrice: product.price * req.body.quantity // Set total price for the new cart
         });
@@ -60,7 +62,9 @@ const addToCart = catchError(async (req, res, next) => {
         isCartExist.cartItems.push({
             product: req.body.product,
             quantity: req.body.quantity,
-            price: product.price
+            price: product.price,
+            size: req.body.size,
+            color: req.body.color
         });
     }
 

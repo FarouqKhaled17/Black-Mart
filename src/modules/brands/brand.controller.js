@@ -5,7 +5,7 @@ import { brandModel } from "../../../database/models/brand.model.js"
 //? Add Brand
 const addBrand = catchError(async (req, res, next) => {
     req.body.slug = slugify(req.body.name.toLowerCase().split(' ').join('-'))
-    req.body.img = req.file.filename
+    if (req.file) req.body.img = req.file.filename
     let newBrand = new brandModel(req.body)
     // check if brand already exists
     const brand = await brandModel.findOne({ name: req.body.name })

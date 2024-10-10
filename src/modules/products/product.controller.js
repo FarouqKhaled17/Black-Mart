@@ -7,7 +7,7 @@ import { statusCode } from "../../utils/statusCode.js"
 const addProduct = catchError(async (req, res, next) => {
     req.body.slug = slugify(req.body.name.toLowerCase().split(' ').join('-'));
     req.body.imgCover = req.files.imgCover[0].filename;
-    req.body.images = req.files.images.map(img => img.filename);
+    // req.body.images = req.files.images.map(img => img.filename);
 
     // Check if product already exists
     const existingProduct = await productModel.findOne({ name: req.body.name });

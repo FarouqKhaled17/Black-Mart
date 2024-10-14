@@ -37,9 +37,16 @@ const createCashOrder = catchError(async (req, res, next) => {
 
 //get specific order
 const getSpecificOrder = catchError(async (req, res, next) => {
-    let order = await orderModel.findOne({ user: req.user._id }).populate("orderItems.product");
-    if (!order) return next(new AppError("Order not found!", statusCode.NOT_FOUND));
-    res.status(statusCode.OK).json({ message: "Order found successfully ✅", order });
+    const orders = await orderModel.find({ user: req.user._id }).populate("orderItems.product");
+    if (!orders.length) {
+        return next(new AppError("No orders found for this user!", statusCode.NOT_FOUND));
+    }
+    const totalPriceOfAllOrders = orders.reduce((acc, order) => acc + order.totalOrderPrice, 0);
+    res.status(statusCode.OK).json({
+        message: "Orders found successfully ✅",
+        orders,
+        totalPriceOfAllOrders
+    });
 });
 
 //get all orders

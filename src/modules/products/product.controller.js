@@ -27,19 +27,18 @@ const addProduct = catchError(async (req, res, next) => {
     .populate("brand", "name")
     .populate("subCategory", "name");
 
-  return res
-    .status(statusCode.CREATED)
-    .json({
-      message: "Product Added Successfully ✅",
-      product: populatedProduct,
-    });
+  return res.status(statusCode.CREATED).json({
+    message: "Product Added Successfully ✅",
+    product: populatedProduct,
+  });
 });
 
 //* Update Product
 const updateProduct = catchError(async (req, res, next) => {
   if (req.body.name) req.body.slug = slugify(req.body.name);
   if (req.files.imgCover) req.body.imgCover = req.files.imgCover[0].filename;
-  // if (req.files.images) req.body.images = req.files.images.map(img => img.filename)
+  if (req.files.images)
+    req.body.images = req.files.images.map((img) => img.filename);
   let product = await productModel.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
   });

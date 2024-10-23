@@ -42,10 +42,21 @@ const productSchema = new mongoose.Schema(
     // ],
     // typeof: String,
 
-    // style: String,
     size: [],
     color: [],
-    // typeof: String,
+    style: {
+      type: String,
+      required: false,
+    },
+    typeof: {
+      type: String,
+      required: false,
+    },
+    discount: {
+      type: Number,
+      default: 0,
+      required: false
+    },
     imgCover: String,
     images: [],
     price: {

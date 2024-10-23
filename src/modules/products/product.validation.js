@@ -1,4 +1,4 @@
-import joi from 'joi';
+import joi from "joi";
 
 //validation for createing a new category
 const addNewProductVal = joi.object({
@@ -20,20 +20,23 @@ const addNewProductVal = joi.object({
   // style: joi.string(),
   // color: joi.string(),
 
-  // typeof: joi.string(),
-  // style: joi.string(),
+  // Marking `typeof`, `style`, `discount` as optional
+  typeof: joi.string().optional(), // Optional field
+  style: joi.string().optional(), // Optional field
+  discount: joi.number().min(0).max(100).optional(), // Optional field
+
   color: joi.array().items(joi.string()).min(1),
   size: joi.array().items(joi.string()).min(1),
   createdBy: joi.string().hex().length(24).optional(),
 });
 //validation for getting a specific category
 const getSpecificProductVal = joi.object({
-    id: joi.string().required().hex().length(24),
-})
+  id: joi.string().required().hex().length(24),
+});
 //validation for deleting a category
 const deleteProductVal = joi.object({
-    id: joi.string().required().hex().length(24),
-})
+  id: joi.string().required().hex().length(24),
+});
 
 //validation for updating a category
 const updateProductVal = joi.object({
@@ -46,19 +49,17 @@ const updateProductVal = joi.object({
   category: joi.string().required().hex().length(24),
   subcategory: joi.string().required().hex().length(24),
   brand: joi.string().min(2).max(100).trim(),
-  // typeof: joi.string(),
-  // style: joi.string(),
+  typeof: joi.string().optional(), // Optional field
+  style: joi.string().optional(), // Optional field
+  discount: joi.number().min(0).max(100).optional(), // Optional field
   color: joi.array().items(joi.string()).min(1),
   size: joi.array().items(joi.string()).min(1),
   createdBy: joi.string().hex().length(24).optional(),
 });
 
-
-
-
 export {
-    addNewProductVal,
-    getSpecificProductVal,
-    deleteProductVal,
-    updateProductVal
-}
+  addNewProductVal,
+  getSpecificProductVal,
+  deleteProductVal,
+  updateProductVal,
+};

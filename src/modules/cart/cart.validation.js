@@ -1,38 +1,42 @@
-import joi from 'joi';
+import joi from "joi";
 
 //validation for adding to cart
 const addToCartVal = joi.object({
-    product: joi.string().required().hex().length(24),
-    quantity: joi.number().min(1).options({ convert: false }),
-    price: joi.number().min(1).options({ convert: false }),
-})
+  product: joi.string().required().hex().length(24),
+  quantity: joi.number().min(1).options({ convert: false }),
+  price: joi.number().min(1).options({ convert: false }),
+  size: joi.string().min(1).max(10).optional(),
+  color: joi.string().min(1).max(20).optional(),
+});
 
 //validation for gettting specific cart
 const getCartVal = joi.object({
-    id: joi.string().required().hex().length(24),
-})
+  id: joi.string().required().hex().length(24),
+});
 
 //validation for removing from cart
 const removeItemFromCartVal = joi.object({
-    id: joi.string().required().hex().length(24),
-    quantity: joi.number().min(1),
-})
+  id: joi.string().required().hex().length(24),
+  quantity: joi.number().min(1),
+});
 
 //validation for removing from cart
 const updateCartVal = joi.object({
-    id: joi.string().required().hex().length(24),
-    quantity: joi.number().required().min(1),
-})
+  id: joi.string().required().hex().length(24),
+  quantity: joi.number().required().min(1).options({ convert: false }),
+  size: joi.string().min(1).max(10).optional(),
+  color: joi.string().min(1).max(20).optional(),
+});
 
 //validation for applying coupon
 const applyCouponVal = joi.object({
-    code: joi.string().required(),
-})
+  code: joi.string().required(),
+});
 
 export {
-    addToCartVal,
-    updateCartVal,
-    getCartVal,
-    removeItemFromCartVal,
-    applyCouponVal
-}
+  addToCartVal,
+  updateCartVal,
+  getCartVal,
+  removeItemFromCartVal,
+  applyCouponVal,
+};

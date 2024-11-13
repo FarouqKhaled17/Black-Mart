@@ -1,4 +1,3 @@
-import slugify from "slugify"
 import { catchError } from "../../middleware/catchError.js"
 import { userModel } from "../../../database/models/user.model.js"
 
